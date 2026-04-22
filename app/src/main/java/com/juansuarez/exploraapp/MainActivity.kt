@@ -15,19 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val myNavController = rememberNavController()
-            NavHost(
-                navController = myNavController,
-                startDestination = "login",
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                composable("login") {
-                    LoginScreen(onLoginSuccess = {myNavController.navigate("register")}, onNavigateToRegister = { myNavController.navigate("register")})
-                }
-                composable("register") {
-                    RegisterScreen(onRegisterSuccess = {myNavController.navigate("login")}, onNavigateToLogin = { myNavController.navigate("login")}, onBackClick = {myNavController.popBackStack()})
-                }
-            }
+            navigationApp()
         }
     }
 }
