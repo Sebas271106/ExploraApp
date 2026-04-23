@@ -29,6 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.auth
 import com.juansuarez.exploraapp.ui.theme.ExploraAppTheme
 
@@ -228,7 +230,11 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                                 if (task.isSuccessful) {
                                     onLoginSuccess()
                                 } else {
-                                    loginError = "Error de inicio de sesión"
+                                    loginError = when(task.exception) {
+                                        is FirebaseAuthInvalidCredentialsException -> "Correo o Contraseña incorrecta"
+                                        is FirebaseAuthInvalidUserException -> "No existe un cuenta con este correo"
+                                        else -> "Error al iniciar sesion. Intenta de nuevo"
+                                    }
                                 }
                             }
                     },
