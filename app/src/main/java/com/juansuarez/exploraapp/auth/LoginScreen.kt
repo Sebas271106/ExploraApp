@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,18 +33,26 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.auth
+import com.juansuarez.exploraapp.validateEmail
+import com.juansuarez.exploraapp.validatePassword
 import com.juansuarez.exploraapp.ui.theme.ExploraAppTheme
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
+fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister: () -> Unit) {
 
     val auth = Firebase.auth
-    val activity = LocalView.current.context as Activity
+    val context = LocalView.current.context
+    val activity = context as? Activity
 
     // Estados para los Inputs
     var inputEmail by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
+
+    // Manejo De Errores
     var loginError by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf("") }
+
 
     // Colores para Login
     val primaryOrange = Color(0xFFE45D25)
@@ -57,7 +66,8 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 24.dp)
+                .statusBarsPadding()
+                .navigationBarsPadding()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -65,14 +75,18 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(280.dp)
+                    .height(260.dp)
                     .clip(RoundedCornerShape(bottomStart = 60.dp, bottomEnd = 60.dp))
             ) {
                 // Placeholder for the landscape image
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.LightGray)
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(Color.LightGray, Color.Gray)
+                            )
+                        )
                 )
 
                 Column(
@@ -82,7 +96,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(60.dp)
+                            .size(70.dp)
                             .clip(CircleShape)
                             .background(primaryOrange),
                         contentAlignment = Alignment.Center
@@ -91,7 +105,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                             imageVector = Icons.Default.Home,
                             contentDescription = "Logo",
                             tint = Color.White,
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(35.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -135,11 +149,25 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = inputEmail,
-                    onValueChange = { inputEmail = it },
+                    onValueChange = { 
+                        inputEmail = it
+                        emailError = ""
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
+                        .heightIn(min = 56.dp)
                         .clip(RoundedCornerShape(28.dp)),
+                    isError = emailError.isNotEmpty(),
+                    supportingText = {
+                        if (emailError.isNotEmpty()) {
+                            Text(emailError, color = MaterialTheme.colorScheme.error)
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Email
+                    ),
                     placeholder = { Text("nombre@ejemplo.com", color = Color.Gray) },
                     leadingIcon = {
                         Icon(
@@ -151,14 +179,15 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = inputBg,
                         unfocusedContainerColor = inputBg,
-                        disabledContainerColor = inputBg,
+                        errorContainerColor = inputBg.copy(alpha = 0.9f),
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent
                     ),
                     singleLine = true
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -182,61 +211,73 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = inputPassword,
-                    onValueChange = { inputPassword = it },
+                    onValueChange = { 
+                        inputPassword = it
+                        passwordError = ""
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
+                        .heightIn(min = 56.dp)
                         .clip(RoundedCornerShape(28.dp)),
-                    placeholder = { Text("........", color = Color.Gray) },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = Color.Gray
-                        )
+                    isError = passwordError.isNotEmpty(),
+                    supportingText = {
+                        if (passwordError.isNotEmpty()) {
+                            Text(passwordError, color = MaterialTheme.colorScheme.error)
+                        }
                     },
-                    trailingIcon = {
-                        Icon(
-                            Icons.Default.Home,
-                            contentDescription = null,
-                            tint = Color.Gray
-                        )
-                    },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Password
+                    ),
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = inputBg,
                         unfocusedContainerColor = inputBg,
-                        disabledContainerColor = inputBg,
+                        errorContainerColor = inputBg.copy(alpha = 0.9f),
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent
                     ),
                     singleLine = true
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
                 if (loginError.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         loginError,
-                        color = Color.Red,
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 14.sp
                     )
                 }
 
+                Spacer(modifier = Modifier.height(32.dp))
+
                 Button(
                     onClick = {
-                        auth.signInWithEmailAndPassword(inputEmail, inputPassword)
-                            .addOnCompleteListener(activity) { task ->
-                                if (task.isSuccessful) {
-                                    onLoginSuccess()
-                                } else {
-                                    loginError = when(task.exception) {
-                                        is FirebaseAuthInvalidCredentialsException -> "Correo o Contraseña incorrecta"
-                                        is FirebaseAuthInvalidUserException -> "No existe un cuenta con este correo"
-                                        else -> "Error al iniciar sesion. Intenta de nuevo"
+                        val emailValidation = validateEmail(inputEmail)
+                        val passwordValidation = validatePassword(inputPassword)
+                        
+                        emailError = emailValidation.second
+                        passwordError = passwordValidation.second
+
+                        if (emailValidation.first && passwordValidation.first) {
+                            activity?.let { act ->
+                                auth.signInWithEmailAndPassword(inputEmail, inputPassword)
+                                    .addOnCompleteListener(act) { task ->
+                                        if (task.isSuccessful) {
+                                            onLoginSuccess()
+                                        } else {
+                                            loginError = when (task.exception) {
+                                                is FirebaseAuthInvalidCredentialsException -> "Correo o Contraseña incorrecta"
+                                                is FirebaseAuthInvalidUserException -> "No existe un cuenta con este correo"
+                                                else -> "Error al iniciar sesión. Intenta de nuevo"
+                                            }
+                                        }
                                     }
-                                }
                             }
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -256,12 +297,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                         contentAlignment = Alignment.Center
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("Iniciar Sesión", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            Text("Iniciar Sesión", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
                             Spacer(modifier = Modifier.width(8.dp))
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = null,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(20.dp),
+                                tint = Color.White
                             )
                         }
                     }
@@ -292,23 +334,21 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Row(
+                SocialButton(
+                    text = "Google",
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    SocialButton(
-                        text = "Google",
-                        modifier = Modifier.weight(1f),
-                        icon = Icons.Default.Email
-                    )
-                }
+                    icon = Icons.Default.Email
+                )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            Row {
+            Row(
+                modifier = Modifier.padding(bottom = 32.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(text = "¿No tienes cuenta? ", color = Color.Gray, fontSize = 14.sp)
                 Text(
                     text = "Regístrate",
@@ -330,14 +370,18 @@ fun SocialButton(
 ) {
     OutlinedButton(
         onClick = { /* Handle social login */ },
-        modifier = modifier.height(50.dp),
-        shape = RoundedCornerShape(25.dp),
-        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
+        modifier = modifier.height(56.dp),
+        shape = RoundedCornerShape(28.dp),
+        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black),
+        border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(20.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(20.dp), tint = Color(0xFFDB4437))
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }

@@ -14,7 +14,7 @@ fun navigationApp() {
         navController = myNavController,
         startDestination = "login",
         modifier = Modifier.fillMaxSize(),
-    ) {
+    ) { 
         composable("login") {
             LoginScreen(
                 onClickRegister = { myNavController.navigate("register") },
