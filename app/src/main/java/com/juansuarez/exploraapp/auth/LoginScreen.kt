@@ -68,6 +68,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister: () -> Unit) {
                 .fillMaxSize()
                 .statusBarsPadding()
                 .navigationBarsPadding()
+                .imePadding()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

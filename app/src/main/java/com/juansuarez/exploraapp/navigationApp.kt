@@ -6,13 +6,27 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Composable
 fun navigationApp() {
+
     val myNavController = rememberNavController()
+    var myStartDestination: String = "login"
+
+    // Mantener Sesion Activa
+    val auth = Firebase.auth
+    val currentUser = auth.currentUser
+
+    if (currentUser != null) {
+        myStartDestination = "home"
+    } else {
+        myStartDestination = "login"
+    }
     NavHost(
         navController = myNavController,
-        startDestination = "login",
+        startDestination = myStartDestination,
         modifier = Modifier.fillMaxSize(),
     ) { 
         composable("login") {

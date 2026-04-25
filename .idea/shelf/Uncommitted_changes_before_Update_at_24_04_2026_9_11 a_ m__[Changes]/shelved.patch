@@ -1,0 +1,146 @@
+Index: app/src/main/java/com/juansuarez/exploraapp/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.juansuarez.exploraapp\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.activity.enableEdgeToEdge\r\n\r\n\r\nclass MainActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        enableEdgeToEdge()\r\n        setContent {\r\n            navigationApp()\r\n        }\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/juansuarez/exploraapp/MainActivity.kt b/app/src/main/java/com/juansuarez/exploraapp/MainActivity.kt
+--- a/app/src/main/java/com/juansuarez/exploraapp/MainActivity.kt	(revision 1919d4c7597da259d029131d1493163ea1cec60e)
++++ b/app/src/main/java/com/juansuarez/exploraapp/MainActivity.kt	(date 1777039365037)
+@@ -6,7 +6,7 @@
+ import androidx.activity.enableEdgeToEdge
+ 
+ 
+-class MainActivity : ComponentActivity() {
++class   MainActivity : ComponentActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         enableEdgeToEdge()
+Index: app/src/main/java/com/juansuarez/exploraapp/HomeScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.juansuarez.exploraapp\r\n\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.res.colorResource\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.unit.sp\r\n\r\n@Composable\r\nfun HomeScreen(){\r\n    Text(\r\n        \"Hola\",\r\n        color = colorResource(id = R.color.white),\r\n        fontSize = 24.sp,\r\n        fontWeight = FontWeight.Bold,\r\n    )\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/juansuarez/exploraapp/HomeScreen.kt b/app/src/main/java/com/juansuarez/exploraapp/HomeScreen.kt
+--- a/app/src/main/java/com/juansuarez/exploraapp/HomeScreen.kt	(revision 1919d4c7597da259d029131d1493163ea1cec60e)
++++ b/app/src/main/java/com/juansuarez/exploraapp/HomeScreen.kt	(date 1777039839142)
+@@ -1,17 +1,29 @@
+ package com.juansuarez.exploraapp
+ 
++import androidx.compose.foundation.background
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.material3.MaterialTheme
+ import androidx.compose.material3.Text
+ import androidx.compose.runtime.Composable
+-import androidx.compose.ui.res.colorResource
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.sp
+ 
+ @Composable
+-fun HomeScreen(){
+-    Text(
+-        "Hola",
+-        color = colorResource(id = R.color.white),
+-        fontSize = 24.sp,
+-        fontWeight = FontWeight.Bold,
+-    )
+-}
+\ No newline at end of file
++fun HomeScreen() {
++    Box(
++        modifier = Modifier
++            .fillMaxSize()
++            .background(MaterialTheme.colorScheme.background),
++        contentAlignment = Alignment.Center
++    ) {
++        Text(
++            text = "¡Bienvenido a ExploraApp!",
++            color = MaterialTheme.colorScheme.primary,
++            fontSize = 28.sp,
++            fontWeight = FontWeight.Bold,
++        )
++    }
++}
+Index: app/src/main/java/com/juansuarez/exploraapp/auth/LoginScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.juansuarez.exploraapp\r\n\r\nimport android.app.Activity\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.text.KeyboardOptions\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.automirrored.filled.ArrowForward\r\nimport androidx.compose.material.icons.filled.Email\r\nimport androidx.compose.material.icons.filled.Home\r\nimport androidx.compose.material.icons.filled.Lock\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Brush\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.platform.LocalView\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.text.input.KeyboardType\r\nimport androidx.compose.ui.text.input.PasswordVisualTransformation\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.google.firebase.Firebase\r\nimport com.google.firebase.auth.FirebaseAuthInvalidCredentialsException\r\nimport com.google.firebase.auth.FirebaseAuthInvalidUserException\r\nimport com.google.firebase.auth.auth\r\nimport com.juansuarez.exploraapp.ui.theme.ExploraAppTheme\r\n\r\n@Composable\r\nfun LoginScreen(onLoginSuccess: () -> Unit, onClickRegister :() -> Unit) {\r\n\r\n    val auth = Firebase.auth\r\n    val activity = LocalView.current.context as Activity\r\n\r\n    // Estados para los Inputs\r\n    var inputEmail by remember { mutableStateOf(\"\") }\r\n    var inputPassword by remember { mutableStateOf(\"\") }\r\n    var loginError by remember { mutableStateOf(\"\") }\r\n\r\n    // Colores para Login\r\n    val primaryOrange = Color(0xFFE45D25)\r\n    val lightGrayBg = Color(0xFFF8F9FE)\r\n    val inputBg = Color(0xFFE5E5EA)\r\n\r\n    Surface(\r\n        modifier = Modifier.fillMaxSize(),\r\n        color = lightGrayBg\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(bottom = 24.dp)\r\n                .verticalScroll(rememberScrollState()),\r\n            horizontalAlignment = Alignment.CenterHorizontally\r\n        ) {\r\n            // Header Image with Rounded Corners\r\n            Box(\r\n                modifier = Modifier\r\n                    .fillMaxWidth()\r\n                    .height(280.dp)\r\n                    .clip(RoundedCornerShape(bottomStart = 60.dp, bottomEnd = 60.dp))\r\n            ) {\r\n                // Placeholder for the landscape image\r\n                Box(\r\n                    modifier = Modifier\r\n                        .fillMaxSize()\r\n                        .background(Color.LightGray)\r\n                )\r\n\r\n                Column(\r\n                    modifier = Modifier.fillMaxSize(),\r\n                    horizontalAlignment = Alignment.CenterHorizontally,\r\n                    verticalArrangement = Arrangement.Center\r\n                ) {\r\n                    Box(\r\n                        modifier = Modifier\r\n                            .size(60.dp)\r\n                            .clip(CircleShape)\r\n                            .background(primaryOrange),\r\n                        contentAlignment = Alignment.Center\r\n                    ) {\r\n                        Icon(\r\n                            imageVector = Icons.Default.Home,\r\n                            contentDescription = \"Logo\",\r\n                            tint = Color.White,\r\n                            modifier = Modifier.size(30.dp)\r\n                        )\r\n                    }\r\n                    Spacer(modifier = Modifier.height(12.dp))\r\n                    Text(\r\n                        text = \"Explorando Colombia\",\r\n                        color = primaryOrange,\r\n                        fontSize = 24.sp,\r\n                        fontWeight = FontWeight.Bold\r\n                    )\r\n                }\r\n            }\r\n\r\n            Spacer(modifier = Modifier.height(24.dp))\r\n\r\n            Text(\r\n                text = \"Bienvenido\",\r\n                fontSize = 28.sp,\r\n                fontWeight = FontWeight.Bold,\r\n                color = Color.Black\r\n            )\r\n            Text(\r\n                text = \"Explora la magia de Colombia hoy.\",\r\n                fontSize = 14.sp,\r\n                color = Color.Gray,\r\n                modifier = Modifier.padding(top = 4.dp)\r\n            )\r\n\r\n            Spacer(modifier = Modifier.height(32.dp))\r\n\r\n            Column(\r\n                modifier = Modifier\r\n                    .fillMaxWidth()\r\n                    .padding(horizontal = 32.dp)\r\n            ) {\r\n                Text(\r\n                    text = \"CORREO ELECTRÓNICO\",\r\n                    fontSize = 12.sp,\r\n                    fontWeight = FontWeight.Bold,\r\n                    color = Color.Gray\r\n                )\r\n                Spacer(modifier = Modifier.height(8.dp))\r\n                TextField(\r\n                    value = inputEmail,\r\n                    onValueChange = { inputEmail = it },\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .height(56.dp)\r\n                        .clip(RoundedCornerShape(28.dp)),\r\n                    placeholder = { Text(\"nombre@ejemplo.com\", color = Color.Gray) },\r\n                    leadingIcon = {\r\n                        Icon(\r\n                            Icons.Default.Email,\r\n                            contentDescription = null,\r\n                            tint = Color.Gray\r\n                        )\r\n                    },\r\n                    colors = TextFieldDefaults.colors(\r\n                        focusedContainerColor = inputBg,\r\n                        unfocusedContainerColor = inputBg,\r\n                        disabledContainerColor = inputBg,\r\n                        focusedIndicatorColor = Color.Transparent,\r\n                        unfocusedIndicatorColor = Color.Transparent\r\n                    ),\r\n                    singleLine = true\r\n                )\r\n\r\n                Spacer(modifier = Modifier.height(20.dp))\r\n\r\n                Row(\r\n                    modifier = Modifier.fillMaxWidth(),\r\n                    horizontalArrangement = Arrangement.SpaceBetween,\r\n                    verticalAlignment = Alignment.Bottom\r\n                ) {\r\n                    Text(\r\n                        text = \"CONTRASEÑA\",\r\n                        fontSize = 12.sp,\r\n                        fontWeight = FontWeight.Bold,\r\n                        color = Color.Gray\r\n                    )\r\n                    Text(\r\n                        text = \"¿Olvidaste tu contraseña?\",\r\n                        fontSize = 11.sp,\r\n                        fontWeight = FontWeight.Bold,\r\n                        color = primaryOrange,\r\n                        modifier = Modifier.clickable { /* Handle forgot password */ }\r\n                    )\r\n                }\r\n                Spacer(modifier = Modifier.height(8.dp))\r\n                TextField(\r\n                    value = inputPassword,\r\n                    onValueChange = { inputPassword = it },\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .height(56.dp)\r\n                        .clip(RoundedCornerShape(28.dp)),\r\n                    placeholder = { Text(\"........\", color = Color.Gray) },\r\n                    leadingIcon = {\r\n                        Icon(\r\n                            Icons.Default.Lock,\r\n                            contentDescription = null,\r\n                            tint = Color.Gray\r\n                        )\r\n                    },\r\n                    trailingIcon = {\r\n                        Icon(\r\n                            Icons.Default.Home,\r\n                            contentDescription = null,\r\n                            tint = Color.Gray\r\n                        )\r\n                    },\r\n                    visualTransformation = PasswordVisualTransformation(),\r\n                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),\r\n                    colors = TextFieldDefaults.colors(\r\n                        focusedContainerColor = inputBg,\r\n                        unfocusedContainerColor = inputBg,\r\n                        disabledContainerColor = inputBg,\r\n                        focusedIndicatorColor = Color.Transparent,\r\n                        unfocusedIndicatorColor = Color.Transparent\r\n                    ),\r\n                    singleLine = true\r\n                )\r\n\r\n                Spacer(modifier = Modifier.height(32.dp))\r\n                if (loginError.isNotEmpty()) {\r\n                    Text(\r\n                        loginError,\r\n                        color = Color.Red,\r\n                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)\r\n                    )\r\n                }\r\n\r\n                Button(\r\n                    onClick = {\r\n                        auth.signInWithEmailAndPassword(inputEmail, inputPassword)\r\n                            .addOnCompleteListener(activity) { task ->\r\n                                if (task.isSuccessful) {\r\n                                    onLoginSuccess()\r\n                                } else {\r\n                                    loginError = when(task.exception) {\r\n                                        is FirebaseAuthInvalidCredentialsException -> \"Correo o Contraseña incorrecta\"\r\n                                        is FirebaseAuthInvalidUserException -> \"No existe un cuenta con este correo\"\r\n                                        else -> \"Error al iniciar sesion. Intenta de nuevo\"\r\n                                    }\r\n                                }\r\n                            }\r\n                    },\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .height(56.dp),\r\n                    shape = RoundedCornerShape(28.dp),\r\n                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),\r\n                    contentPadding = PaddingValues()\r\n                ) {\r\n                    Box(\r\n                        modifier = Modifier\r\n                            .fillMaxSize()\r\n                            .background(\r\n                                brush = Brush.horizontalGradient(\r\n                                    colors = listOf(primaryOrange, Color(0xFFFF8A65))\r\n                                )\r\n                            ),\r\n                        contentAlignment = Alignment.Center\r\n                    ) {\r\n                        Row(verticalAlignment = Alignment.CenterVertically) {\r\n                            Text(\"Iniciar Sesión\", fontSize = 16.sp, fontWeight = FontWeight.Bold)\r\n                            Spacer(modifier = Modifier.width(8.dp))\r\n                            Icon(\r\n                                Icons.AutoMirrored.Filled.ArrowForward,\r\n                                contentDescription = null,\r\n                                modifier = Modifier.size(20.dp)\r\n                            )\r\n                        }\r\n                    }\r\n                }\r\n\r\n                Spacer(modifier = Modifier.height(32.dp))\r\n\r\n                Row(\r\n                    verticalAlignment = Alignment.CenterVertically,\r\n                    modifier = Modifier.fillMaxWidth()\r\n                ) {\r\n                    HorizontalDivider(\r\n                        modifier = Modifier.weight(1f),\r\n                        thickness = 0.5.dp,\r\n                        color = Color.LightGray\r\n                    )\r\n                    Text(\r\n                        text = \" O CONTINUAR CON \",\r\n                        fontSize = 12.sp,\r\n                        fontWeight = FontWeight.Bold,\r\n                        color = Color.Gray,\r\n                        modifier = Modifier.padding(horizontal = 8.dp)\r\n                    )\r\n                    HorizontalDivider(\r\n                        modifier = Modifier.weight(1f),\r\n                        thickness = 0.5.dp,\r\n                        color = Color.LightGray\r\n                    )\r\n                }\r\n\r\n                Spacer(modifier = Modifier.height(32.dp))\r\n\r\n                Row(\r\n                    modifier = Modifier.fillMaxWidth(),\r\n                    horizontalArrangement = Arrangement.spacedBy(16.dp)\r\n                ) {\r\n                    SocialButton(\r\n                        text = \"Google\",\r\n                        modifier = Modifier.weight(1f),\r\n                        icon = Icons.Default.Email\r\n                    )\r\n                }\r\n            }\r\n\r\n            Spacer(modifier = Modifier.weight(1f))\r\n\r\n            Row {\r\n                Text(text = \"¿No tienes cuenta? \", color = Color.Gray, fontSize = 14.sp)\r\n                Text(\r\n                    text = \"Regístrate\",\r\n                    color = primaryOrange,\r\n                    fontSize = 14.sp,\r\n                    fontWeight = FontWeight.Bold,\r\n                    modifier = Modifier.clickable { onClickRegister() }\r\n                )\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun SocialButton(\r\n    text: String,\r\n    modifier: Modifier = Modifier,\r\n    icon: androidx.compose.ui.graphics.vector.ImageVector\r\n) {\r\n    OutlinedButton(\r\n        onClick = { /* Handle social login */ },\r\n        modifier = modifier.height(50.dp),\r\n        shape = RoundedCornerShape(25.dp),\r\n        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)\r\n    ) {\r\n        Row(verticalAlignment = Alignment.CenterVertically) {\r\n            Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(20.dp))\r\n            Spacer(modifier = Modifier.width(8.dp))\r\n            Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)\r\n        }\r\n    }\r\n}\r\n\r\n@Preview(showBackground = true)\r\n@Composable\r\nfun LoginScreenPreview() {\r\n    ExploraAppTheme() {\r\n        LoginScreen(onLoginSuccess = {}, onClickRegister = {})\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/juansuarez/exploraapp/auth/LoginScreen.kt b/app/src/main/java/com/juansuarez/exploraapp/auth/LoginScreen.kt
+--- a/app/src/main/java/com/juansuarez/exploraapp/auth/LoginScreen.kt	(revision 1919d4c7597da259d029131d1493163ea1cec60e)
++++ b/app/src/main/java/com/juansuarez/exploraapp/auth/LoginScreen.kt	(date 1777039634106)
+@@ -225,18 +225,24 @@
+ 
+                 Button(
+                     onClick = {
+-                        auth.signInWithEmailAndPassword(inputEmail, inputPassword)
+-                            .addOnCompleteListener(activity) { task ->
+-                                if (task.isSuccessful) {
+-                                    onLoginSuccess()
+-                                } else {
+-                                    loginError = when(task.exception) {
+-                                        is FirebaseAuthInvalidCredentialsException -> "Correo o Contraseña incorrecta"
+-                                        is FirebaseAuthInvalidUserException -> "No existe un cuenta con este correo"
+-                                        else -> "Error al iniciar sesion. Intenta de nuevo"
++
++                        val isValidateEmail = validateEmail(inputEmail).first // Para haceder al primer parametro de la funcion
++                        val isValidatePassword = validatePassword(inputPassword).first
++                        if (isValidateEmail && isValidatePassword){
++                            auth.signInWithEmailAndPassword(inputEmail, inputPassword)
++                                .addOnCompleteListener(activity) { task ->
++                                    if (task.isSuccessful) {
++                                        onLoginSuccess()
++                                    } else {
++                                        loginError = when(task.exception) {
++                                            is FirebaseAuthInvalidCredentialsException -> "Correo o Contraseña incorrecta"
++                                            is FirebaseAuthInvalidUserException -> "No existe un cuenta con este correo"
++                                            else -> "Error al iniciar sesion. Intenta de nuevo"
++                                        }
+                                     }
+                                 }
+-                            }
++                        }
++
+                     },
+                     modifier = Modifier
+                         .fillMaxWidth()
+Index: app/src/main/java/com/juansuarez/exploraapp/Validations.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/juansuarez/exploraapp/Validations.kt b/app/src/main/java/com/juansuarez/exploraapp/Validations.kt
+new file mode 100644
+--- /dev/null	(date 1777039338415)
++++ b/app/src/main/java/com/juansuarez/exploraapp/Validations.kt	(date 1777039338415)
+@@ -0,0 +1,21 @@
++package com.juansuarez.exploraapp
++
++import android.util.Patterns
++
++fun validateEmail(email: String): Pair<Boolean, String> {
++    return when {
++        email.isEmpty() -> Pair(false, "El correo electrónico no puede estar vacío")
++        !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> Pair(false, "El correo electrónico no es válido")           // Libreria de Java para el correo
++        !email.contains("@") -> Pair(false, "El correo electrónico no es válido")
++        else -> Pair(true, "")
++    }
++}
++
++fun validatePassword(password: String): Pair<Boolean, String> {
++    return when{
++        password.isEmpty() -> Pair(false, "La contraseña es requerida")
++        password.length < 8 -> Pair(false, "La contraseña debe tener al menos 8 caracteres")
++        !password.any { it.isDigit() } -> Pair(false, "La contraseña debe contener al menos un número")
++        else -> Pair(true, "")
++    }
++}
+\ No newline at end of file
