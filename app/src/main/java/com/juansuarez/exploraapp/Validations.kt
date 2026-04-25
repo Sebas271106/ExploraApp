@@ -4,7 +4,7 @@ import android.util.Patterns
 
 fun validateEmail(email: String): Pair<Boolean, String> {
     return when {
-        email.isEmpty() -> Pair(false, "El correo electrónico no puede estar vacío")
+        email.isEmpty() -> Pair(false, "El correo electrónico es requerido")
         !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> Pair(false, "El correo electrónico no es válido")           // Libreria de Java para el correo
         !email.contains("@") -> Pair(false, "El correo electrónico no es válido")
         else -> Pair(true, "")
@@ -16,6 +16,22 @@ fun validatePassword(password: String): Pair<Boolean, String> {
         password.isEmpty() -> Pair(false, "La contraseña es requerida")
         password.length < 8 -> Pair(false, "La contraseña debe tener al menos 8 caracteres")
         !password.any { it.isDigit() } -> Pair(false, "La contraseña debe contener al menos un número")
+        else -> Pair(true, "")
+    }
+}
+
+fun validateName(name: String): Pair<Boolean, String>{
+    return when{
+        name.isEmpty() -> Pair(false, "El nombre es requerido")
+        name.length < 3 -> Pair(false, "El nombre debe tener al menos 3 caracteres")
+        else -> Pair(true, "")
+    }
+}
+
+fun validatePasswordConfirm(password: String, confirmPassword: String): Pair<Boolean, String>{
+    return when{
+        confirmPassword.isEmpty() -> Pair(false, "La contraseña es requerida")
+        confirmPassword != password -> Pair(false, "Las contraseñas no coinciden")
         else -> Pair(true, "")
     }
 }
