@@ -8,8 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.juansuarez.exploraapp.ui.elements.AddTouristicPlaceScreen
 import com.juansuarez.exploraapp.ui.elements.HomeScreen
-import com.juansuarez.exploraapp.ui.elements.addTouristicPlaceScreen
 
 @Composable
 fun navigationApp() {
@@ -63,7 +63,7 @@ fun navigationApp() {
             )
         }
         composable("touristicPlaces") {
-            addTouristicPlaceScreen()
+            AddTouristicPlaceScreen()
         }
     }
 }
